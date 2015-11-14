@@ -14,12 +14,11 @@ function getMessage(a, b) {
     if (Array.isArray(a) && Array.isArray(b)) {
         var square = 0;
         for (var i = 0; i < b.length; i++) {
-            var d = a[i] * b[i];
-            square += d;
+            square += a[i] * b[i];
+
         }
-        if (b) {
+
             return "Общая площадь артефактов сжатия: " + square + " пикселей";
-        }
 
     }
 
