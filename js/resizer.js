@@ -118,17 +118,22 @@
         this._resizeConstraint.side / 0.78 - this._ctx.lineWidth / 2,
         this._resizeConstraint.side / 0.78 - this._ctx.lineWidth / 2);
 
+      this._ctx.fillStyle = '#ffe753';
+      this._ctx.beginPath();
+      this._ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+      this._ctx.fill();
 
       this._ctx.fillStyle = 'white';
       this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, -30, -250);
 
 
-      this._ctx.lineWidth = 6;
+      this._ctx.lineWidth = 10;
+      this._ctx.lineCap = 'round';
       // Цвет обводки.
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
+      this._ctx.setLineDash([0.1, 20]);
       // Смещение первого штриха от начала линии.
       this._ctx.lineDashOffset = 7;
       this._ctx.strokeRect(
