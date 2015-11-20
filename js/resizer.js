@@ -118,13 +118,11 @@
         this._resizeConstraint.side / 0.78 - this._ctx.lineWidth / 2,
         this._resizeConstraint.side / 0.78 - this._ctx.lineWidth / 2);
 
-      this._ctx.fillStyle = '#ffe753';
-      this._ctx.beginPath();
-      this._ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-      this._ctx.fill();
 
       this._ctx.fillStyle = 'white';
-      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, -30, -250);
+      this._ctx.font = '18px Arial';
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, -50,
+        (-this._resizeConstraint.side / 2.1) - this._ctx.lineWidth / 2.1);
 
 
       this._ctx.lineWidth = 10;
