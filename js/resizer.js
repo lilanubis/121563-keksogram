@@ -30,15 +30,15 @@
       var INITIAL_SIDE_RATIO = 0.75;
       // Размер меньшей стороны изображения.
       var side = Math.min(
-          this._container.width * INITIAL_SIDE_RATIO,
-          this._container.height * INITIAL_SIDE_RATIO);
+        this._container.width * INITIAL_SIDE_RATIO,
+        this._container.height * INITIAL_SIDE_RATIO);
 
       // Изначально предлагаемое кадрирование — часть по центру с размером в 3/4
       // от размера меньшей стороны.
       this._resizeConstraint = new Square(
-          this._container.width / 2 - side / 2,
-          this._container.height / 2 - side / 2,
-          side);
+        this._container.width / 2 - side / 2,
+        this._container.height / 2 - side / 2,
+        side);
 
       // Отрисовка изначального состояния канваса.
       this.redraw();
@@ -88,14 +88,8 @@
       // чего-либо с другой обводкой.
 
       // Толщина линии.
-      this._ctx.lineWidth = 6;
-      // Цвет обводки.
-      this._ctx.strokeStyle = '#ffe753';
-      // Размер штрихов. Первый элемент массива задает длину штриха, второй
-      // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
-      // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
+
+
 
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
@@ -113,11 +107,40 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
+
+
+      this._ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+      this._ctx.lineWidth = 90;
+
       this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+        (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+        (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+        this._resizeConstraint.side / 0.78 - this._ctx.lineWidth / 2,
+        this._resizeConstraint.side / 0.78 - this._ctx.lineWidth / 2);
+
+
+      this._ctx.fillStyle = 'white';
+      this._ctx.font = '18px Arial';
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, -50,
+        (-this._resizeConstraint.side / 2.1) - this._ctx.lineWidth / 2.1);
+
+
+      this._ctx.lineWidth = 10;
+      this._ctx.lineCap = 'round';
+      // Цвет обводки.
+      this._ctx.strokeStyle = '#ffe753';
+      // Размер штрихов. Первый элемент массива задает длину штриха, второй
+      // расстояние между соседними штрихами.
+      this._ctx.setLineDash([0.1, 20]);
+      // Смещение первого штриха от начала линии.
+      this._ctx.lineDashOffset = 7;
+      this._ctx.strokeRect(
+        (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+        (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+        this._resizeConstraint.side - this._ctx.lineWidth / 2,
+        this._resizeConstraint.side - this._ctx.lineWidth / 2);
+
+
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
@@ -126,6 +149,8 @@
       // некорректно сработает даже очистка холста или нужно будет использовать
       // сложные рассчеты для координат прямоугольника, который нужно очистить.
       this._ctx.restore();
+
+
     },
 
     /**
@@ -160,8 +185,8 @@
      */
     updatePosition: function(x, y) {
       this.moveConstraint(
-          this._cursorPosition.x - x,
-          this._cursorPosition.y - y);
+        this._cursorPosition.x - x,
+        this._cursorPosition.y - y);
       this._cursorPosition = new Coordinate(x, y);
     },
 
@@ -221,9 +246,9 @@
      */
     moveConstraint: function(deltaX, deltaY, deltaSide) {
       this.setConstraint(
-          this._resizeConstraint.x + (deltaX || 0),
-          this._resizeConstraint.y + (deltaY || 0),
-          this._resizeConstraint.side + (deltaSide || 0));
+        this._resizeConstraint.x + (deltaX || 0),
+        this._resizeConstraint.y + (deltaY || 0),
+        this._resizeConstraint.side + (deltaSide || 0));
     },
 
     /**
@@ -279,9 +304,7 @@
       var temporaryCtx = temporaryCanvas.getContext('2d');
       temporaryCanvas.width = this._resizeConstraint.side;
       temporaryCanvas.height = this._resizeConstraint.side;
-      temporaryCtx.drawImage(this._image,
-          -this._resizeConstraint.x,
-          -this._resizeConstraint.y);
+      temporaryCtx.drawImage(this._image, -this._resizeConstraint.x, -this._resizeConstraint.y);
       imageToExport.src = temporaryCanvas.toDataURL('image/png');
 
       return imageToExport;
