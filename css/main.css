@@ -98,6 +98,44 @@ body {
   max-width: 582px;
 }
 
+.error-message {
+  width:300px;
+  height:150px;
+  text-align: center;
+  background-color:rgba(0, 0, 0, 0.7);
+  color:white;
+  box-sizing:border-box;
+  padding:30px 5px;
+  line-height: 25px;
+  position: absolute;
+  left:50%;
+  top:50%;
+  z-index: 5;
+  margin-left:-150px;
+  margin-top:-75px;
+  display:none;
+}
+
+
+.visible {
+  display: block;
+}
+
+.error-message button {
+  margin:10px;
+  width:60px;
+  height:30px;
+  background-color:white;
+  color:black;
+ border:none;
+ font-weight: bold;
+
+}
+
+.error-message button:hover {
+  opacity: 0.8;
+}
+
 .filter-chrome {
   -webkit-filter: grayscale(1);
   filter: grayscale(1);

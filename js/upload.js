@@ -86,6 +86,13 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+  var resizeX = resizeForm['resize-x'];
+  var resizeY = resizeForm['resize-y'];
+  var resizeSize = resizeForm['resize-size'];
+  var resizeFwd = resizeForm['resize-fwd'];
+  var errorMsg = document.getElementById('error');
+  var okBut = document.getElementById('ok-but');
+
 
   /**
    * Форма добавления фильтра.
@@ -191,15 +198,34 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
+
+
+
+
   resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
 
-    if (resizeFormIsValid()) {
+    var resizeXMax = currentResizer._image.naturalWidth - resizeSize.value;
+    var resizeYMax = currentResizer._image.naturalHeight - resizeSize.value;
+    if (resizeX.value <= resizeXMax && resizeY.value <= resizeYMax) {
+
+
       filterImage.src = currentResizer.exportImage().src;
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
+    else {
+    resizeFwd.disabled = true;
+    errorMsg.classList.add('visible');
+
+    okBut.addEventListener("click", function(event){
+    event.preventDefault();
+    resizeFwd.disabled = false;
+    errorMsg.classList.remove('visible');
+
+})
+   }
   };
 
   /**
