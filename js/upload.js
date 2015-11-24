@@ -71,9 +71,6 @@
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
-  function resizeFormIsValid() {
-    return true;
-  }
 
   /**
    * Форма загрузки изображения.
@@ -214,18 +211,18 @@
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+
+    } else {
+      resizeFwd.disabled = true;
+      errorMsg.classList.add('visible');
+
+      okBut.addEventListener('click', function(event) {
+        event.preventDefault();
+        resizeFwd.disabled = false;
+        errorMsg.classList.remove('visible');
+
+      });
     }
-    else {
-    resizeFwd.disabled = true;
-    errorMsg.classList.add('visible');
-
-    okBut.addEventListener("click", function(event){
-    event.preventDefault();
-    resizeFwd.disabled = false;
-    errorMsg.classList.remove('visible');
-
-})
-   }
   };
 
   /**
