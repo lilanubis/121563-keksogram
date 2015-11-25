@@ -91,6 +91,14 @@
   var okBut = document.getElementById('ok-but');
 
 
+  var noFilter = document.getElementById('upload-filter-none');
+  var filterChrome = document.getElementById('upload-filter-chrome');
+  var filterSepia = document.getElementById('upload-filter-sepia');
+
+  var expireDate = +Date.now() + (25 + 31 + 30 + 31 + 31 + 30 + 31 - 8) * 24 * 60 * 60 * 1000;
+  var formattedDate = new Date(expireDate).toUTCString();
+
+
   /**
    * Форма добавления фильтра.
    * @type {HTMLFormElement}
@@ -244,6 +252,20 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
+    if (noFilter.checked) {
+      document.cookie = 'checkedFilter=' + noFilter.value + ';expires=' + formattedDate;
+    }
+
+    if (filterChrome.checked) {
+      document.cookie = 'checkedFilter=' + filterChrome.value + ';expires=' + formattedDate;
+    }
+
+    if (filterSepia.checked) {
+      document.cookie = 'checkedFilter=' + filterSepia.value + ';expires=' + formattedDate;
+    }
+
+    //alert(docCookies.getItem('checkedFilter'));
+
     cleanupResizer();
     updateBackground();
 
@@ -276,6 +298,7 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
 
   cleanupResizer();
   updateBackground();
