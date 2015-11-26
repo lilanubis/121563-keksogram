@@ -91,10 +91,6 @@
   var okBut = document.getElementById('ok-but');
 
 
-  var noFilter = document.forms['upload-filter']['upload-filter-none'];
-  var filterChrome = document.forms['upload-filter']['upload-filter-chrome'];
-  var filterSepia = document.forms['upload-filter']['upload-filter-sepia'];
-
   document.forms['upload-filter']['upload-filter'].value = docCookies.getItem('checkedFilter');
 
 
@@ -265,21 +261,10 @@
     evt.preventDefault();
 
 
+    var checkedFilter = document.forms['upload-filter']['upload-filter'].value;
+    docCookies.setItem('checkedFilter', checkedFilter, formattedDate);
 
-    if (noFilter.checked) {
 
-      docCookies.setItem('checkedFilter', noFilter.value, formattedDate);
-    }
-
-    if (filterChrome.checked) {
-
-      docCookies.setItem('checkedFilter', filterChrome.value, formattedDate);
-    }
-
-    if (filterSepia.checked) {
-
-      docCookies.setItem('checkedFilter', filterSepia.value, formattedDate);
-    }
 
 
     cleanupResizer();
