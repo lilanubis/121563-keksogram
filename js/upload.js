@@ -98,6 +98,10 @@
   document.forms['upload-filter']['upload-filter'].value = docCookies.getItem('checkedFilter');
 
 
+
+
+
+
   var expireDate = +Date.now() + (25 + 31 + 30 + 31 + 31 + 30 + 31 - 8) * 24 * 60 * 60 * 1000;
   var formattedDate = new Date(expireDate).toUTCString();
 
@@ -222,7 +226,10 @@
 
       resizeForm.classList.add('invisible');
 
+      filterImage.classList.add('filter-' + docCookies.getItem('checkedFilter'));
+
       filterForm.classList.remove('invisible');
+
 
     } else {
       resizeFwd.disabled = true;
@@ -230,6 +237,7 @@
 
       okBut.addEventListener('click', function(event) {
         event.preventDefault();
+
         resizeFwd.disabled = false;
         errorMsg.classList.remove('visible');
 
@@ -259,15 +267,18 @@
 
 
     if (noFilter.checked) {
-      document.cookie = 'checkedFilter=' + noFilter.value + ';expires=' + formattedDate;
+
+      docCookies.setItem('checkedFilter', noFilter.value, formattedDate);
     }
 
     if (filterChrome.checked) {
-      document.cookie = 'checkedFilter=' + filterChrome.value + ';expires=' + formattedDate;
+
+      docCookies.setItem('checkedFilter', filterChrome.value, formattedDate);
     }
 
     if (filterSepia.checked) {
-      document.cookie = 'checkedFilter=' + filterSepia.value + ';expires=' + formattedDate;
+
+      docCookies.setItem('checkedFilter', filterSepia.value, formattedDate);
     }
 
 
