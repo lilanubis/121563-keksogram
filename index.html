@@ -3,6 +3,7 @@
 <head>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Open+Sans&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/main.css">
+  <script src="lib/cookies.js"></script>
   <meta charset="utf-8">
   <title>Keksogram</title>
 </head>
@@ -42,6 +43,8 @@
       <button class="upload-form-controls-fwd" type="submit" id="resize-fwd" name="fwd"></button>
     </fieldset>
   </form>
+
+  <div class = "error-message" id="error">Вы ввели неправильные данные, попробуйте еще раз!<br> <button class="ok-but" id="ok-but">OK</button></div>
 
   <form class="upload-form upload-filter invisible" id="upload-filter" method="post" enctype="multipart/form-data">
     <img src="" class="filter-image-preview" />
@@ -89,7 +92,8 @@
 </template>
 <!-- i was told to put those new js-scripts after the rest js-scripts used in this .html, but i don't see any. so i just put them here,
 before the </body> tag --->
-<script src="js/check.js"></script>
-<script src="js/upload-stat.min.js"></script>
+<script src="js/resizer.js"></script>
+<script src="js/upload.js"></script>
+
 </body>
 </html>
