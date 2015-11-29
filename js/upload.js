@@ -94,10 +94,6 @@
   document.forms['upload-filter']['upload-filter'].value = docCookies.getItem('checkedFilter');
 
 
-
-
-
-
   var expireDate = +Date.now() + (25 + 31 + 30 + 31 + 31 + 30 + 31 - 8) * 24 * 60 * 60 * 1000;
   var formattedDate = new Date(expireDate).toUTCString();
 
@@ -219,11 +215,8 @@
 
 
       filterImage.src = currentResizer.exportImage().src;
-
       resizeForm.classList.add('invisible');
-
-      filterImage.classList.add('filter-' + docCookies.getItem('checkedFilter'));
-
+      filterForm.onchange();
       filterForm.classList.remove('invisible');
 
 
@@ -263,8 +256,6 @@
 
     var checkedFilter = document.forms['upload-filter']['upload-filter'].value;
     docCookies.setItem('checkedFilter', checkedFilter, formattedDate);
-
-
 
 
     cleanupResizer();
