@@ -91,6 +91,13 @@
   var okBut = document.getElementById('ok-but');
 
 
+  document.forms['upload-filter']['upload-filter'].value = docCookies.getItem('checkedFilter');
+
+
+  var expireDate = +Date.now() + (25 + 31 + 30 + 31 + 31 + 30 + 31 - 8) * 24 * 60 * 60 * 1000;
+  var formattedDate = new Date(expireDate).toUTCString();
+
+
   /**
    * Форма добавления фильтра.
    * @type {HTMLFormElement}
@@ -208,9 +215,10 @@
 
 
       filterImage.src = currentResizer.exportImage().src;
-
       resizeForm.classList.add('invisible');
+      filterForm.onchange();
       filterForm.classList.remove('invisible');
+
 
     } else {
       resizeFwd.disabled = true;
@@ -218,6 +226,7 @@
 
       okBut.addEventListener('click', function(event) {
         event.preventDefault();
+
         resizeFwd.disabled = false;
         errorMsg.classList.remove('visible');
 
@@ -243,6 +252,11 @@
    */
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
+
+
+    var checkedFilter = document.forms['upload-filter']['upload-filter'].value;
+    docCookies.setItem('checkedFilter', checkedFilter, formattedDate);
+
 
     cleanupResizer();
     updateBackground();
@@ -276,6 +290,7 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
 
   cleanupResizer();
   updateBackground();
