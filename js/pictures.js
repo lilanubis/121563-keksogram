@@ -1,5 +1,6 @@
 'use strict';
 
+/*global pictures*/
 var filtersTop = document.querySelector('.filters');
 var container = document.querySelector('.pictures');
 
@@ -11,15 +12,11 @@ pictures.forEach(function(pictureForm) {
 
 function getElementFromTemplate(data) {
   var template = document.querySelector('#picture-template');
-  //console.log(template);
-  if ('content' in template) {
-    var element = template.content.children[0].cloneNode(true);
-  } else {
-    var element = template.content.children[0].cloneNode(true);
-  }
+  var element = template.content.children[0].cloneNode(true);
 
   element.querySelector('.picture-comments').textContent = data.comments;
   element.querySelector('.picture-likes').textContent = data.likes;
+
   var imgPic = element.querySelector('img');
 
   var backgroundImage = new Image();
