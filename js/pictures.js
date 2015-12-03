@@ -1,8 +1,11 @@
-'use strict';
 
 /*global pictures*/
+'use strict';
+
+
 var filtersTop = document.querySelector('.filters');
 var container = document.querySelector('.pictures');
+var template = document.querySelector('#picture-template');
 
 
 pictures.forEach(function(pictureForm) {
@@ -10,10 +13,11 @@ pictures.forEach(function(pictureForm) {
   container.appendChild(element);
 });
 
-function getElementFromTemplate(data) {
-  var template = document.querySelector('#picture-template');
-  var element = template.content.children[0].cloneNode(true);
+filtersTop.classList.remove('hidden');
 
+function getElementFromTemplate(data) {
+
+  var element = template.content.children[0].cloneNode(true);
   element.querySelector('.picture-comments').textContent = data.comments;
   element.querySelector('.picture-likes').textContent = data.likes;
 
@@ -28,8 +32,6 @@ function getElementFromTemplate(data) {
   backgroundImage.onerror = function() {
     element.classList.add('picture-load-failure');
   };
-  filtersTop.classList.remove('hidden');
   backgroundImage.src = data.url;
-
   return element;
 }
