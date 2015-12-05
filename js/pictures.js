@@ -1,5 +1,5 @@
 
-/*global pictures*/
+
 'use strict';
 
 
@@ -7,13 +7,42 @@ var filtersTop = document.querySelector('.filters');
 var container = document.querySelector('.pictures');
 var template = document.querySelector('#picture-template');
 
-
-pictures.forEach(function(pictureForm) {
-  var element = getElementFromTemplate(pictureForm);
-  container.appendChild(element);
-});
-
+console.log('start');
+getPictures();
 filtersTop.classList.remove('hidden');
+console.log('end');
+
+
+
+function getPictures() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'data/pictures.json');
+  container.classList.add('pictures-loading');
+  xhr.onload = function(evt) {
+    container.classList.remove('pictures-loading');
+    var rawData = evt.target.response;
+    var loadedPictures = JSON.parse(rawData);
+    renderPictures(loadedPictures);
+  };
+
+  xhr.onerror = function() {
+    container.classList.remove('pictures-failure');
+  };
+
+  xhr.timeout = 3000;
+  xhr.ontimeout = function() {
+    container.classList.remove('pictures-failure');
+  };
+
+  function renderPictures(pictures) {
+    pictures.forEach(function(pictureForm) {
+      var element = getElementFromTemplate(pictureForm);
+      container.appendChild(element);
+    });
+  }
+  xhr.send();
+}
+
 
 function getElementFromTemplate(data) {
 
