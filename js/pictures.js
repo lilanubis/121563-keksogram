@@ -6,61 +6,103 @@
 var filtersTop = document.querySelector('.filters');
 var container = document.querySelector('.pictures');
 var template = document.querySelector('#picture-template');
+var filterMap;
 
-console.log('start');
+
 getPictures();
 filtersTop.classList.remove('hidden');
-console.log('end');
-
-
 
 function getPictures() {
+  var loadedPictures;
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'data/pictures.json');
   container.classList.add('pictures-loading');
   xhr.onload = function(evt) {
     container.classList.remove('pictures-loading');
     var rawData = evt.target.response;
-    var loadedPictures = JSON.parse(rawData);
+    loadedPictures = JSON.parse(rawData);
     renderPictures(loadedPictures);
   };
 
   xhr.onerror = function() {
-    container.classList.remove('pictures-failure');
+    container.classList.add('pictures-failure');
   };
 
   xhr.timeout = 3000;
   xhr.ontimeout = function() {
-    container.classList.remove('pictures-failure');
+    container.classList.add('pictures-failure');
   };
 
   function renderPictures(pictures) {
+    container.innerHTML = '';
+    var fragment = document.createDocumentFragment();
     pictures.forEach(function(pictureForm) {
       var element = getElementFromTemplate(pictureForm);
-      container.appendChild(element);
+      fragment.appendChild(element);
+      container.appendChild(fragment);
     });
   }
   xhr.send();
-}
 
+  filtersTop.onchange = function() {
 
-function getElementFromTemplate(data) {
+    if (!filterMap) {
+      filterMap = {
+        'popular': 'filter-popular',
+        'new': 'filter-new',
+        'discussed': 'filter-discussed'
+      };
+    }
 
-  var element = template.content.children[0].cloneNode(true);
-  element.querySelector('.picture-comments').textContent = data.comments;
-  element.querySelector('.picture-likes').textContent = data.likes;
+    var selectedFilter = [].filter.call(filtersTop['filter'], function(item) {
+      return item.checked;
+    })[0].value;
 
-  var imgPic = element.querySelector('img');
+    var picturesCopy = loadedPictures.slice(0);
 
-  var backgroundImage = new Image();
-  backgroundImage.onload = function() {
-    element.style.backgroundImage = 'url(\'' + backgroundImage.src + '\')';
-    element.replaceChild(backgroundImage, imgPic);
+    switch (selectedFilter) {
+      case 'discussed':
+        picturesCopy = picturesCopy.sort(function(a, b) {
+          return b.comments - a.comments;
+        });
+        break;
+
+      case 'popular':
+        renderPictures(loadedPictures);
+        break;
+
+      case 'new':
+        picturesCopy = picturesCopy.filter(function(a) {
+          var date = Date.now();
+          return date - Date.parse(a.date) < 7776000000;
+        });
+        picturesCopy = picturesCopy.sort(function(a, b) {
+          return Date.parse(b.date) - Date.parse(a.date);
+        });
+        break;
+    }
+    renderPictures(picturesCopy);
   };
 
-  backgroundImage.onerror = function() {
-    element.classList.add('picture-load-failure');
-  };
-  backgroundImage.src = data.url;
-  return element;
+
+  function getElementFromTemplate(data) {
+
+    var element = template.content.children[0].cloneNode(true);
+    element.querySelector('.picture-comments').textContent = data.comments;
+    element.querySelector('.picture-likes').textContent = data.likes;
+
+    var imgPic = element.querySelector('img');
+
+    var backgroundImage = new Image();
+    backgroundImage.onload = function() {
+      element.style.backgroundImage = 'url(\'' + backgroundImage.src + '\')';
+      element.replaceChild(backgroundImage, imgPic);
+    };
+
+    backgroundImage.onerror = function() {
+      element.classList.add('picture-load-failure');
+    };
+    backgroundImage.src = data.url;
+    return element;
+  }
 }
