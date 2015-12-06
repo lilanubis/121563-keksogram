@@ -58,30 +58,30 @@ function getPictures() {
       return item.checked;
     })[0].value;
 
-    var picturesCopy = loadedPictures.slice(0);
+    var picturesToRender;
 
     switch (selectedFilter) {
       case 'discussed':
-        picturesCopy = picturesCopy.sort(function(a, b) {
+        picturesToRender = loadedPictures.slice(0).sort(function(a, b) {
           return b.comments - a.comments;
         });
         break;
 
       case 'popular':
-        renderPictures(loadedPictures);
+        picturesToRender = loadedPictures;
         break;
 
       case 'new':
-        picturesCopy = picturesCopy.filter(function(a) {
+        picturesToRender = loadedPictures.filter(function(a) {
           var date = Date.now();
           return date - Date.parse(a.date) < 7776000000;
         });
-        picturesCopy = picturesCopy.sort(function(a, b) {
+        picturesToRender = picturesToRender.sort(function(a, b) {
           return Date.parse(b.date) - Date.parse(a.date);
         });
         break;
     }
-    renderPictures(picturesCopy);
+    renderPictures(picturesToRender);
   };
 
 
