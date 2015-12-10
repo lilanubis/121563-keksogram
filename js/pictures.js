@@ -55,41 +55,42 @@ function getPictures() {
   xhr.send();
 
 
+  filters.addEventListener('click', function(evt) {
+    var clickedElement = evt.target;
+    if (clickedElement.classList.contains('filters-radio')) {
 
-  filtersTop.onchange = function() {
-    filters.addEventListener('click', function(evt) {
-      var clickedElement = evt.target;
-      if (clickedElement.classList.contains('filters-radio')) {
 
-        switch (clickedElement.id) {
-          case 'filter-discussed':
+      switch (clickedElement.id) {
+        case 'filter-discussed':
 
-            picturesToRender = loadedPicture.slice(0).sort(function(a, b) {
-              return b.comments - a.comments;
-            });
-            break;
+          picturesToRender = loadedPictures.slice(0).sort(function(a, b) {
+            return b.comments - a.comments;
+          });
+          break;
 
-          case 'filter-popular':
+        case 'filter-popular':
 
-            picturesToRender = loadedPictures;
-            break;
+          picturesToRender = loadedPictures;
+          break;
 
-          case 'filter-new':
+        case 'filter-new':
 
-            picturesToRender = loadedPictures.filter(function(a) {
-              var date = Date.now();
-              return date - Date.parse(a.date) < 7776000000;
-            });
-            picturesToRender = picturesToRender.sort(function(a, b) {
-              return Date.parse(b.date) - Date.parse(a.date);
-            });
-            break;
+          picturesToRender = loadedPictures.filter(function(a) {
+            var date = Date.now();
+            return date - Date.parse(a.date) < 7776000000;
+          });
+          picturesToRender = picturesToRender.sort(function(a, b) {
+            return Date.parse(b.date) - Date.parse(a.date);
+          });
+          break;
 
-        }
-        renderPictures(picturesToRender, 0);
       }
-    });
-  };
+      container.innerHTML = '';
+      console.log(picturesToRender);
+      renderPictures(picturesToRender, 0);
+    }
+  });
+
 
 
   function getElementFromTemplate(data) {
@@ -113,7 +114,7 @@ function getPictures() {
     return element;
   }
 
-  window.addEventListener('scroll', function(evt) {
+  window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
       renderPictures(loadedPictures, ++currentPage);
