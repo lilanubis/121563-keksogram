@@ -1,13 +1,17 @@
-
-
 'use strict';
-
 
 var filtersTop = document.querySelector('.filters');
 var container = document.querySelector('.pictures');
 var template = document.querySelector('#picture-template');
-var filterMap;
 
+var currentPage = 0;
+var PAGE_SIZE = 12;
+
+var scrollTimeout;
+
+var filters = document.querySelector('.filters');
+
+var picturesToRender;
 
 getPictures();
 filtersTop.classList.remove('hidden');
@@ -21,22 +25,28 @@ function getPictures() {
     container.classList.remove('pictures-loading');
     var rawData = evt.target.response;
     loadedPictures = JSON.parse(rawData);
-    renderPictures(loadedPictures);
+    renderPictures(loadedPictures, 0);
   };
 
   xhr.onerror = function() {
     container.classList.add('pictures-failure');
   };
 
+
   xhr.timeout = 3000;
   xhr.ontimeout = function() {
     container.classList.add('pictures-failure');
   };
 
-  function renderPictures(pictures) {
-    container.innerHTML = '';
+  function renderPictures(pictures, pageNumber) {
+    //container.innerHTML = '';
     var fragment = document.createDocumentFragment();
-    pictures.forEach(function(pictureForm) {
+
+    var from = pageNumber * PAGE_SIZE;
+    var to = from + PAGE_SIZE;
+    var pagePictures = loadedPictures.slice(from, to);
+
+    pagePictures.forEach(function(pictureForm) {
       var element = getElementFromTemplate(pictureForm);
       fragment.appendChild(element);
       container.appendChild(fragment);
@@ -44,44 +54,41 @@ function getPictures() {
   }
   xhr.send();
 
+
+
   filtersTop.onchange = function() {
+    filters.addEventListener('click', function(evt) {
+      var clickedElement = evt.target;
+      if (clickedElement.classList.contains('filters-radio')) {
 
-    if (!filterMap) {
-      filterMap = {
-        'popular': 'filter-popular',
-        'new': 'filter-new',
-        'discussed': 'filter-discussed'
-      };
-    }
+        switch (clickedElement.id) {
+          case 'filter-discussed':
 
-    var selectedFilter = [].filter.call(filtersTop['filter'], function(item) {
-      return item.checked;
-    })[0].value;
+            picturesToRender = loadedPicture.slice(0).sort(function(a, b) {
+              return b.comments - a.comments;
+            });
+            break;
 
-    var picturesToRender;
+          case 'filter-popular':
 
-    switch (selectedFilter) {
-      case 'discussed':
-        picturesToRender = loadedPictures.slice(0).sort(function(a, b) {
-          return b.comments - a.comments;
-        });
-        break;
+            picturesToRender = loadedPictures;
+            break;
 
-      case 'popular':
-        picturesToRender = loadedPictures;
-        break;
+          case 'filter-new':
 
-      case 'new':
-        picturesToRender = loadedPictures.filter(function(a) {
-          var date = Date.now();
-          return date - Date.parse(a.date) < 7776000000;
-        });
-        picturesToRender = picturesToRender.sort(function(a, b) {
-          return Date.parse(b.date) - Date.parse(a.date);
-        });
-        break;
-    }
-    renderPictures(picturesToRender);
+            picturesToRender = loadedPictures.filter(function(a) {
+              var date = Date.now();
+              return date - Date.parse(a.date) < 7776000000;
+            });
+            picturesToRender = picturesToRender.sort(function(a, b) {
+              return Date.parse(b.date) - Date.parse(a.date);
+            });
+            break;
+
+        }
+        renderPictures(picturesToRender, 0);
+      }
+    });
   };
 
 
@@ -105,4 +112,12 @@ function getPictures() {
     backgroundImage.src = data.url;
     return element;
   }
+
+  window.addEventListener('scroll', function(evt) {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+      renderPictures(loadedPictures, ++currentPage);
+    }, 100);
+  });
+
 }
