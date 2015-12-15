@@ -13,6 +13,7 @@ var filters = document.querySelector('.filters');
 
 var picturesToRender;
 
+
 getPictures();
 filtersTop.classList.remove('hidden');
 
@@ -25,6 +26,7 @@ function getPictures() {
     container.classList.remove('pictures-loading');
     var rawData = evt.target.response;
     loadedPictures = JSON.parse(rawData);
+    picturesToRender = loadedPictures;
     renderPictures(loadedPictures, 0);
   };
 
@@ -38,23 +40,6 @@ function getPictures() {
     container.classList.add('pictures-failure');
   };
 
-  function renderPictures(pictures, pageNumber) {
-    //container.innerHTML = '';
-    var fragment = document.createDocumentFragment();
-
-    var from = pageNumber * PAGE_SIZE;
-    var to = from + PAGE_SIZE;
-    var pagePictures = loadedPictures.slice(from, to);
-
-    pagePictures.forEach(function(pictureForm) {
-      var element = getElementFromTemplate(pictureForm);
-      fragment.appendChild(element);
-      container.appendChild(fragment);
-    });
-  }
-  xhr.send();
-
-
   filters.addEventListener('click', function(evt) {
     var clickedElement = evt.target;
     if (clickedElement.classList.contains('filters-radio')) {
@@ -66,6 +51,7 @@ function getPictures() {
           picturesToRender = loadedPictures.slice(0).sort(function(a, b) {
             return b.comments - a.comments;
           });
+
           break;
 
         case 'filter-popular':
@@ -87,11 +73,26 @@ function getPictures() {
       }
       container.innerHTML = '';
       console.log(picturesToRender);
+      console.log('filters', currentPage);
+      currentPage = 0;
       renderPictures(picturesToRender, 0);
     }
   });
 
+  function renderPictures(pictures, pageNumber) {
 
+    var fragment = document.createDocumentFragment();
+    var from = pageNumber * PAGE_SIZE;
+    var to = from + PAGE_SIZE;
+    var pagePictures = pictures.slice(from, to);
+
+    pagePictures.forEach(function(pictureForm) {
+      var element = getElementFromTemplate(pictureForm);
+      fragment.appendChild(element);
+      container.appendChild(fragment);
+    });
+  }
+  xhr.send();
 
   function getElementFromTemplate(data) {
 
@@ -117,8 +118,13 @@ function getPictures() {
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
-      renderPictures(loadedPictures, ++currentPage);
+      var from = currentPage * PAGE_SIZE;
+
+      if (from <= loadedPictures.length) {
+
+        renderPictures(picturesToRender, ++currentPage);
+      }
+
     }, 100);
   });
-
 }
