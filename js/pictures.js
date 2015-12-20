@@ -27,7 +27,7 @@ function getPictures() {
     var rawData = evt.target.response;
     loadedPictures = JSON.parse(rawData);
     picturesToRender = loadedPictures;
-    renderPictures(loadedPictures, 0);
+    renderPictures(loadedPictures, currentPage);
   };
 
   xhr.onerror = function() {
@@ -63,7 +63,7 @@ function getPictures() {
 
           picturesToRender = loadedPictures.filter(function(a) {
             var date = Date.now();
-            return date - Date.parse(a.date) < 7776000000;
+            return date - Date.parse(a.date) < 10368000000;
           });
           picturesToRender = picturesToRender.sort(function(a, b) {
             return Date.parse(b.date) - Date.parse(a.date);
@@ -72,8 +72,6 @@ function getPictures() {
 
       }
       container.innerHTML = '';
-      console.log(picturesToRender);
-      console.log('filters', currentPage);
       currentPage = 0;
       renderPictures(picturesToRender, 0);
     }
